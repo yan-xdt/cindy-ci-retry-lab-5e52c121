@@ -1,0 +1,2 @@
+Controlled acceptance case. Dependency provisioning is external to this PR.
+This file remains unchanged during a CI-only recovery.

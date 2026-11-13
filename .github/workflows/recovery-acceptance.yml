@@ -1,0 +1,22 @@
+name: CI recovery isolated acceptance
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  install-lab-dependency:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Describe controlled infrastructure fixture
+        run: |
+          echo "Isolated controlled dependency-provisioning test; not a spontaneous flake."
+          echo "PR code and dependency provisioning are separate. No credential is used by this probe."
+      - name: Install external lab dependency
+        run: |
+          curl --silent --show-error --fail-with-body --max-time 20 \
+            --header 'Accept: application/vnd.github+json' \
+            'https://api.github.com/repos/yan-xdt/cindy-ci-retry-lab-5e52c121/releases/tags/runtime-dependency-v1' \
+            --output dependency.json
+          node -e "const fs=require('node:fs'); const d=JSON.parse(fs.readFileSync('dependency.json')); if(d.tag_name!=='runtime-dependency-v1')process.exit(1); console.log('Lab dependency metadata available');"
